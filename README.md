@@ -147,9 +147,3 @@ React.useEffect(() => {
   return destroy(() => console.log(count()))
 });
 ```
-
-## gitlab
-
-https://code.ii-ai.tech/ued/doraemon/tree/master/packages/reactSignal
-
-没有权限可以找流川申请
