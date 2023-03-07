@@ -1,4 +1,4 @@
-import { objectIs } from '@ai-indeed/shared';
+import { objectIs } from './objectIs';
 
 export const areTrackedDepsEqual = (nextDeps: any[], prevDeps: any[]) => {
   const len = nextDeps.length;

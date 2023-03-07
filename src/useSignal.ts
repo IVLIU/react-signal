@@ -1,5 +1,5 @@
 import { useState, useCallback, useDebugValue } from 'react';
-import { objectIs } from '@ai-indeed/shared';
+import { objectIs } from './objectIs';
 import { createSignal } from './createSignal';
 import { destroyRef } from './destroy';
 import type { Dispatch, SetStateAction } from 'react';

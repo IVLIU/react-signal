@@ -37,11 +37,11 @@ effect依赖我们可以借助eslint插件，但是有多少次我们需要注�
 
 好了，react-signal来了
 
-## @ai-indeed/react-signal
+## react-signal
 
 talk is cheap, show you the code
 ```typescript react
-import { useSignal, useEffect, untrack } from '@ai-indeed/react-signal';
+import { useSignal, useEffect, untrack } from 'react-signal';
 
 const App = () => {
   // ? [getter, setter]
