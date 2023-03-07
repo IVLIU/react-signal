@@ -25,6 +25,22 @@ const Counter = () => {
 ```
 我们可以看到最大的区别就是取值方式，useState直接返回状态值，但是signal返回getter，需要开发者手动调用
 
+## 调试
+
+```bash
+# 安装依赖
+pnpm install
+# 运行
+npm start
+# 进入example
+cd example
+# 安装依赖
+pnpm install # or yarn
+# 运行
+npm start
+```
+打开http://localhost:1234即可访问，可更改index.tsx实时查看效果
+
 ## react hooks的问题
 
 提起react hooks，reactor又爱又恨，vuer冷嘲热讽，闭包值和effect依赖问题就像我们的心病，写起来又累，又容易出问题。
