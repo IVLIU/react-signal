@@ -27,12 +27,12 @@ export function useSignal<S>(
         : signal._signal.value,
     [],
   );
-  const set = useCallback<Dispatch<SetStateAction<any>>>(
+  const set = useCallback<Dispatch<SetStateAction<S | undefined>>>(
     (nextValue) =>
       setSignal((prevSignal) => {
         const prevValue = prevSignal._signal.value;
         if (typeof nextValue === 'function') {
-          nextValue = nextValue(prevValue);
+          nextValue = (nextValue as (prevValue: S | undefined) => S | undefined)(prevValue);
         }
         if (objectIs(prevValue, nextValue)) {
           return prevSignal;
