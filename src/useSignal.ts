@@ -32,7 +32,9 @@ export function useSignal<S>(
       setSignal((prevSignal) => {
         const prevValue = prevSignal._signal.value;
         if (typeof nextValue === 'function') {
-          nextValue = (nextValue as (prevValue: S | undefined) => S | undefined)(prevValue);
+          nextValue = (
+            nextValue as (prevValue: S | undefined) => S | undefined
+          )(prevValue);
         }
         if (objectIs(prevValue, nextValue)) {
           return prevSignal;
