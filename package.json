@@ -22,7 +22,7 @@
   "peerDependencies": {
     "react": ">=16.8"
   },
-  "name": "@bean/react-signal",
+  "name": "@ivliu/react-signal",
   "author": "ivliu",
   "module": "dist/react-signal.esm.js",
   "size-limit": [
