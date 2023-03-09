@@ -23,7 +23,7 @@
     "react": ">=16.8"
   },
   "name": "@bean/react-signal",
-  "author": "bean",
+  "author": "ivliu",
   "module": "dist/react-signal.esm.js",
   "size-limit": [
     {
