@@ -193,9 +193,16 @@ const onClick = useCallback(() => {
 #### useMemo
 
 ```typescript
-const onClick = useMemo(() => {
-  return count1() + count2();
-})
+function App() {
+  const [count, setCount] = useSignal(0);
+
+  const doubleCount = useMemo(() => {
+    return count() * 2;
+  });
+
+  return <div onClick={() => setCount(count() + 1)}>{doubleCount()}</div>
+}
+
 ```
 
 #### createSignal

@@ -33,13 +33,14 @@ const App = () => {
   });
   // ? auto track count();
   useEffect2(() => {
+    console.log("effect", count());
+    return () => console.log("destroy", count());
+  });
+  // ? auto track doubleCount();
+  useEffect2(() => {
     console.log("effect", doubleCount());
     return () => console.log("destroy", doubleCount());
   });
-  // // ? useEffect with undefined deps
-  // useEffect2(() => {
-  //   console.log('update');
-  // }, null);
 
   return (
     <>
