@@ -1,6 +1,6 @@
-import 'react-app-polyfill/ie11';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import "react-app-polyfill/ie11";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import {
   createSignal,
   useSignal,
@@ -8,7 +8,7 @@ import {
   useMemo as useMemo2,
   useEffect as useEffect2,
   untrack,
-} from '../.';
+} from "../.";
 
 const externalSignal = createSignal(() => 60);
 
@@ -17,7 +17,7 @@ const App = () => {
   const [count, setCount] = useSignal(externalSignal);
   // ? citation stable
   const getCount = useCallback2(() => {
-    console.log('useCallback', count());
+    console.log("useCallback", count());
   });
 
   const doubleCount = useMemo2(() => {
@@ -33,20 +33,20 @@ const App = () => {
   });
   // ? auto track count();
   useEffect2(() => {
-    console.log('effect', count());
-    return () => console.log('destroy', count());
+    console.log("effect", doubleCount());
+    return () => console.log("destroy", doubleCount());
   });
-  // ? useEffect with undefined deps
-  useEffect2(() => {
-    console.log('update');
-  }, null);
+  // // ? useEffect with undefined deps
+  // useEffect2(() => {
+  //   console.log('update');
+  // }, null);
 
   return (
     <>
       <div onClick={() => getCount()}>count is {count()}</div>
-      <div>double count is {doubleCount}</div>
+      <div>double count is {doubleCount()}</div>
     </>
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById("root"));
