@@ -47,7 +47,7 @@ npm install @ivliu/react-signal --save
 ## 用法
 
 ```typescript react
-import { useSignal, useEffect, untrack } from 'react-signal';
+import { useSignal, useEffect, untrack } from '@ivliu/react-signal';
 
 const App = () => {
   // ? [getter, setter]
