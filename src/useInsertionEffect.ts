@@ -11,12 +11,8 @@ if (typeof React.useInsertionEffect === "function") {
     effect: EffectCallback,
     deps?: DependencyList | null
   ) => {
-    const dep = useState(() => new Dep(deps))[0];
-    const isNullDeps = dep.deps === null;
-
-    if (deps) {
-      dep.deps = deps;
-    }
+    const firstDep = useState(() => new Dep())[0];
+    const isNullDeps = deps === null;
 
     useDebugValue(effect);
 
@@ -25,10 +21,10 @@ if (typeof React.useInsertionEffect === "function") {
         if (isNullDeps) {
           return destroy(effect());
         } else {
-          return runWithDep(dep, () => destroy(effect()));
+          return runWithDep(firstDep, () => destroy(effect()));
         }
       },
-      isNullDeps ? undefined : [...(dep.deps as DependencyList)]
+      isNullDeps ? undefined : deps ? [firstDep.deps, ...deps] : [firstDep.deps]
     );
   };
 }
