@@ -19,6 +19,10 @@ export const useMemo = <T>(factory: () => T, deps?: DependencyList) => {
     []
   );
 
+  if (deps) {
+    dep.deps = deps;
+  }
+
   const memoValue = raw_useMemo(() => {
     return runWithDep(dep, () => {
       const newValue = factory();

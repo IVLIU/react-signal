@@ -1,6 +1,6 @@
-import { areTrackedDepsEqual } from './areTrackedDepsEqual';
-import type { DependencyList } from 'react';
-import type { ISignal, IDep, IDepRef } from './type';
+import { areTrackedDepsEqual } from "./areTrackedDepsEqual";
+import type { DependencyList } from "react";
+import type { ISignal, IDep, IDepRef } from "./type";
 
 export const depRef: IDepRef = { current: null };
 
@@ -33,5 +33,12 @@ export class Dep implements IDep {
   }
   get isDep() {
     return this._isDep;
+  }
+  // setter
+  set deps(newDeps: DependencyList | null) {
+    if (this._deps === null || newDeps === null) {
+      return;
+    }
+    this._deps = [this._deps[0], ...newDeps];
   }
 }

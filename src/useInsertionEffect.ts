@@ -14,6 +14,10 @@ if (typeof React.useInsertionEffect === "function") {
     const dep = useState(() => new Dep(deps))[0];
     const isNullDeps = dep.deps === null;
 
+    if (deps) {
+      dep.deps = deps;
+    }
+
     useDebugValue(effect);
 
     React.useInsertionEffect(

@@ -15,6 +15,7 @@ const externalSignal = createSignal(() => 60);
 const App = () => {
   // ? [getter, setter]
   const [count, setCount] = useSignal(externalSignal);
+  const [value, setValue] = React.useState(0);
   // ? citation stable
   const getCount = useCallback2(() => {
     console.log("useCallback", count());
@@ -27,20 +28,33 @@ const App = () => {
   // ? untrack count();
   useEffect2(() => {
     const handle = setInterval(() => {
-      setCount(untrack(() => count()) - 1);
+      setValue((prev) => prev + 1);
     }, 1000);
     return () => clearInterval(handle);
   });
   // ? auto track count();
   useEffect2(() => {
-    console.log("effect", count());
-    return () => console.log("destroy", count());
-  });
-  // ? auto track doubleCount();
-  useEffect2(() => {
-    console.log("effect", doubleCount());
-    return () => console.log("destroy", doubleCount());
-  });
+    console.log("effect", value);
+    return () => console.log("destroy", value);
+  }, [value]);
+
+  // // ? untrack count();
+  // useEffect2(() => {
+  //   const handle = setInterval(() => {
+  //     setCount(untrack(() => count()) - 1);
+  //   }, 1000);
+  //   return () => clearInterval(handle);
+  // });
+  // // ? auto track count();
+  // useEffect2(() => {
+  //   console.log("effect", count());
+  //   return () => console.log("destroy", count());
+  // });
+  // // ? auto track doubleCount();
+  // useEffect2(() => {
+  //   console.log("effect", doubleCount());
+  //   return () => console.log("destroy", doubleCount());
+  // });
 
   return (
     <>
