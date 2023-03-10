@@ -1,18 +1,18 @@
-import { areTrackedDepsEqual } from './areTrackedDepsEqual';
-import type { DependencyList } from 'react';
-import type { ISignal, IDep, IDepRef } from './type';
+import { areTrackedDepsEqual } from "./areTrackedDepsEqual";
+import type { DependencyList } from "react";
+import type { ISignal, IDep, IDepRef } from "./type";
 
 export const depRef: IDepRef = { current: null };
 
 export class Dep implements IDep {
   // properties
   private _signals: Set<ISignal>;
-  private _deps: DependencyList | null;
+  private _deps: DependencyList;
   private _isDep: boolean;
   // constructor
-  constructor(deps?: DependencyList | null) {
+  constructor() {
     this._signals = new Set();
-    this._deps = deps ? [[], ...deps] : deps === null ? null : [[]];
+    this._deps = [];
     this._isDep = true;
   }
   // getter
@@ -20,14 +20,11 @@ export class Dep implements IDep {
     return this._signals;
   }
   get deps() {
-    if (this._deps) {
-      const current = this._deps[0] as unknown[];
-      const wip = [] as unknown[];
-      this._signals.forEach((signal) => wip.push(signal.value));
-      if (!areTrackedDepsEqual(wip, current)) {
-        // @ts-ignore
-        this._deps[0] = wip;
-      }
+    const current = this._deps as unknown[];
+    const wip = [] as unknown[];
+    this._signals.forEach((signal) => wip.push(signal.value));
+    if (!areTrackedDepsEqual(wip, current)) {
+      this._deps = wip;
     }
     return this._deps;
   }

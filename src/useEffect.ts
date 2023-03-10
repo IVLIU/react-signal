@@ -8,8 +8,8 @@ export const useEffect = (
   effect: EffectCallback,
   deps?: DependencyList | null
 ) => {
-  const dep = useState(() => new Dep(deps))[0];
-  const isNullDeps = dep.deps === null;
+  const firstDep = useState(() => new Dep())[0];
+  const isNullDeps = deps === null;
 
   useDebugValue(effect);
 
@@ -18,9 +18,9 @@ export const useEffect = (
       if (isNullDeps) {
         return destroy(effect());
       } else {
-        return runWithDep(dep, () => destroy(effect()));
+        return runWithDep(firstDep, () => destroy(effect()));
       }
     },
-    isNullDeps ? undefined : [...(dep.deps as DependencyList)]
+    isNullDeps ? undefined : deps ? [firstDep.deps, ...deps] : [firstDep.deps]
   );
 };

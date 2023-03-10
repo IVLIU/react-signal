@@ -1,4 +1,4 @@
-import type { DependencyList } from 'react';
+import type { DependencyList } from "react";
 
 export interface ISignal<T = any> {
   value: T;
@@ -9,7 +9,7 @@ export interface ISignal<T = any> {
 
 export interface IDep {
   signals: Set<ISignal>;
-  deps: DependencyList | null;
+  deps: DependencyList;
   isDep: boolean;
 }
 
