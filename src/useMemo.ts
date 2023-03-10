@@ -28,7 +28,7 @@ export const useMemo = <T>(factory: () => T, deps?: DependencyList) => {
         return get;
       });
     },
-    deps ? [firstDep, ...deps] : [firstDep.deps]
+    deps ? [firstDep.deps, ...deps] : [firstDep.deps]
   );
 
   useDebugValue(signal.value);
