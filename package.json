@@ -3,6 +3,22 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "js",
+    "ts",
+    "react", 
+    "signals", 
+    "react-signals", 
+    "useSignal", 
+    "use-signals",
+    "solidjs"
+  ],
+  "homepage": "https://github.com/IVLIU/react-signal",
+  "repository": {
+    "url": "https://github.com/IVLIU/react-signal"
+  },
   "files": [
     "dist"
   ],
