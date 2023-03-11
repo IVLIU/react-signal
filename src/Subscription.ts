@@ -10,8 +10,8 @@ export abstract class Subscription<T extends any[]> {
     return this._listeners;
   }
   // methods
-  subscribe(listener: (...args: T) => void) {
+  subscribe = (listener: (...args: T) => void) => {
     this._listeners.add(listener);
     return () => this._listeners.delete(listener);
-  }
+  };
 }
