@@ -208,6 +208,24 @@ function App() {
 #### createSignal
 
 createSignal是脱离react组件创建signal的方式，本意是为了和useSyncExternalStore更好的结合使用。
+
+结合useSyncExternalStore
+```typescript react
+import { useSyncExternalStore } from 'react';
+import { createSignal, useCallback } from '@ivliu/react-signal';
+
+const store = createSignal({ theme: 'light' });
+
+function App() {
+  const { theme } = useSyncExternalStore(
+    store.subscribe,
+    useCallback(() => store.value),
+  );
+  
+  return <div onClick={() => store.value = { theme: 'dark' } }>{theme}</div>
+}
+```
+结合useSignal
 ```typescript react
 import { createSignal, useSignal, useEffect } from '@ivliu/react-signal';
 
