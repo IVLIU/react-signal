@@ -164,6 +164,7 @@ function App() {
 ```
 
 #### useReducer
+我们不建议在严格模式下使用useReducer，因为reducer函数会执行两次，如果你的reducer函数是包含副作用的，那么你将得到意外的结果
 ```typescript react
 import { useReducer, useEffect } from '@ivliu/react-signal';
 
@@ -351,6 +352,40 @@ function App(props: { count3: number }) {
     setCount1(count1 + 1);
     setCount2(count2() + 1);
   }}>{count1 + count2() + props.count3}</div>
+}
+```
+## 与useState的不同
+在使用useSignal的时候需要注意和useState的不同
+```typescript react
+function App1() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <p onClick={() => {
+      // 点击一次，count值加1
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+    }}>{count}</p>
+  )
+}
+
+function App2() {
+  const [count, setCount] = useSignal(0);
+
+  return (
+    <p onClick={() => {
+      // 点击一次，count值加3，因为signal是稳定且可变的
+      setCount(count() + 1);
+      setCount(count() + 1);
+      setCount(count() + 1);
+      // 如果你想保持行为一致，你需要
+      // const current = count();
+      // setCount(current + 1);
+      // setCount(current + 1);
+      // setCount(current + 1);
+    }}>{count}</p>
+  )
 }
 ```
 ## todo
