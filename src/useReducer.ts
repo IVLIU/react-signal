@@ -48,7 +48,12 @@ export function useReducer<
   const [signal, dispatch] = raw_useReducer(
     (prevSignal: IWrapper<any>, action: ReducerAction<R>) => {
       const prevValue = prevSignal._signal.value;
-      const nextValue = reducer(prevSignal._signal.value, action);
+      const nextValue = reducer(
+        destroyRef.current === true
+          ? prevSignal._signal.snapshot
+          : prevSignal._signal.value,
+        action
+      );
       if (objectIs(prevValue, nextValue)) {
         return prevSignal;
       }
