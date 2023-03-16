@@ -16,3 +16,7 @@ export interface IDep {
 export interface IDepRef {
   current: IDep | null;
 }
+
+export interface IWrapper<T> {
+  _signal: ISignal<T>;
+}

@@ -163,6 +163,30 @@ function App() {
 }
 ```
 
+#### useReducer
+```typescript react
+import { useReducer, useEffect } from '@ivliu/react-signal';
+
+function App() {
+  const [count, dispatch] = useReducer(() => 10, 0);
+
+  useEffect(() => {
+    const handle = setTimeout(() => { 
+      // 输出最新值10，而非初次访问的闭包值
+      console.log(count()) 
+    }, 1000);
+    return () => clearTimeout(handle);
+  })
+  // useEffect都不需要写依赖了
+  useEffect(() => {
+    dispatch();
+  })
+
+  // 取值改为getter方式
+  return <div>{count()}</div>
+}
+```
+
 #### useEffect
 
 useEffect用于替换native useEffect，默认不需要填写依赖。执行时机和react effect一致
