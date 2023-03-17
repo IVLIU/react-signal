@@ -45,12 +45,10 @@ export function useReducer<R extends Reducer<any, any>>(
 ): [() => ReducerState<R>, Dispatch<ReducerAction<R>>];
 export function useReducer<
   R extends ReducerWithoutAction<any> | Reducer<any, any>
->(reducer: R, initializerArgOrInitialState: any, initializer?: any) {
+>(reducer: R, initializerArgOrState: any, initializer?: any) {
   const signal = useState(() =>
     createSignal(
-      initializer
-        ? initializer(initializerArgOrInitialState)
-        : initializerArgOrInitialState
+      initializer ? initializer(initializerArgOrState) : initializerArgOrState
     )
   )[0];
   const dispatch = raw_useReducer(
