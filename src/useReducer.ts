@@ -1,4 +1,5 @@
 import {
+  useState,
   useReducer as raw_useReducer,
   useCallback,
   useDebugValue,
@@ -15,7 +16,7 @@ import type {
   Dispatch,
   ReducerAction,
 } from "react";
-import type { ISignal, IWrapper } from "./type";
+import type { ISignal } from "./type";
 
 export function useReducer<R extends ReducerWithoutAction<any>, I>(
   reducer: R,
@@ -43,46 +44,34 @@ export function useReducer<R extends Reducer<any, any>>(
   initializer?: undefined
 ): [() => ReducerState<R>, Dispatch<ReducerAction<R>>];
 export function useReducer<
-  R extends ReducerWithoutAction<IWrapper<any>> | Reducer<IWrapper<any>, any>
+  R extends ReducerWithoutAction<any> | Reducer<any, any>
 >(reducer: R, initializerArgOrInitialState: any, initializer?: any) {
-  const [signal, dispatch] = raw_useReducer(
-    (prevSignal: IWrapper<any>, action: ReducerAction<R>) => {
-      const prevValue = prevSignal._signal.value;
-      const nextValue = reducer(
-        destroyRef.current === true
-          ? prevSignal._signal.snapshot
-          : prevSignal._signal.value,
-        action
-      );
-      if (objectIs(prevValue, nextValue)) {
-        return prevSignal;
-      }
-      prevSignal._signal.value = nextValue;
-      prevSignal._signal.snapshot = prevValue;
-      return Object.freeze({
-        _signal: prevSignal._signal,
-      });
-    },
-    Object.freeze({
-      _signal: createSignal(initializerArgOrInitialState),
-    }),
-    (initialSignal) =>
+  const signal = useState(() =>
+    createSignal(
       initializer
-        ? Object.freeze({
-            _signal: createSignal(initializer(initializerArgOrInitialState)),
-          })
-        : initialSignal
-  );
+        ? initializer(initializerArgOrInitialState)
+        : initializerArgOrInitialState
+    )
+  )[0];
+  const dispatch = raw_useReducer(
+    (prevValue: ReducerState<R>, action: ReducerAction<R>) => {
+      const nextValue = reducer(prevValue, action);
+      if (objectIs(prevValue, nextValue)) {
+        return prevValue;
+      }
+      signal.snapshot = signal.value;
+      signal.value = nextValue;
+      return nextValue;
+    },
+    signal.value
+  )[1];
 
   const get = useCallback(
-    () =>
-      destroyRef.current === true
-        ? signal._signal.snapshot
-        : signal._signal.value,
+    () => (destroyRef.current === true ? signal.snapshot : signal.value),
     []
   );
 
-  useDebugValue(signal._signal.value);
+  useDebugValue(signal.value);
 
   return [get, dispatch];
 }

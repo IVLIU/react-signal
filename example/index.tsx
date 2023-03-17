@@ -17,7 +17,10 @@ const App = () => {
   // ? [getter, setter]
   const [count, setCount] = useSignal(0);
   // const [value, setValue] = React.useState(0);
-  const [value, dispatch] = useReducer((prevValue: number) => prevValue + 1, 0);
+  const [value, dispatch] = useReducer((prevValue: number) => {
+    console.log("reducer");
+    return prevValue + 1;
+  }, 0);
 
   const { theme } = React.useSyncExternalStore(
     store.subscribe,
@@ -53,4 +56,9 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById("root")
+);
