@@ -164,27 +164,14 @@ function App() {
 ```
 
 #### useReducer
-我们不建议在严格模式下使用useReducer，因为reducer函数会执行两次，如果你的reducer函数是包含副作用的，那么你将得到意外的结果
 ```typescript react
 import { useReducer, useEffect } from '@ivliu/react-signal';
 
 function App() {
-  const [count, dispatch] = useReducer(() => 10, 0);
+  const [count, dispatch] = useReducer((prevValue) => prevValue + 1, 0);
 
-  useEffect(() => {
-    const handle = setTimeout(() => { 
-      // 输出最新值10，而非初次访问的闭包值
-      console.log(count()) 
-    }, 1000);
-    return () => clearTimeout(handle);
-  })
-  // useEffect都不需要写依赖了
-  useEffect(() => {
-    dispatch();
-  })
-
-  // 取值改为getter方式
-  return <div>{count()}</div>
+  // dispatch引用是稳定的，当需要对子组件缓存时很有效果
+  return <div onClick={dispatch}>{count()}</div>
 }
 ```
 
