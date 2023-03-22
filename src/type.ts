@@ -1,10 +1,19 @@
-import type { DependencyList } from "react";
+import type { EffectCallback, DependencyList } from "react";
 
 export interface ISignal<T = any> {
   value: T;
   snapshot: T;
   subscribe: (listener: (...args: T[]) => void) => () => boolean;
   isSignal: boolean;
+}
+
+export interface IEffect {
+  isDirty: boolean;
+  execute: () => ReturnType<EffectCallback>;
+}
+
+export interface IEffectRef {
+  current: IEffect | null;
 }
 
 export interface IDep {
@@ -15,8 +24,4 @@ export interface IDep {
 
 export interface IDepRef {
   current: IDep | null;
-}
-
-export interface IWrapper<T> {
-  _signal: ISignal<T>;
 }
