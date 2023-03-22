@@ -1,7 +1,7 @@
-import { Subscription } from './Subscription';
-import { track } from './track';
-import { untrackRef } from './untrack';
-import type { ISignal } from './type';
+import { Subscription } from "./Subscription";
+import { track } from "./track";
+import { untrackRef } from "./untrack";
+import type { ISignal, IEffect } from "./type";
 
 export class Signal<S = undefined>
   extends Subscription<S[]>
@@ -10,14 +10,16 @@ export class Signal<S = undefined>
   // properties
   private _value: S;
   private _snapshot: S;
+  private _deps: Set<IEffect>;
   private _isSignal: boolean;
   // constructor
   constructor(initialValue: S | (() => S)) {
     super();
     this._value = this._snapshot =
-      typeof initialValue === 'function'
+      typeof initialValue === "function"
         ? (initialValue as () => S)()
         : initialValue;
+    this._deps = new Set();
     this._isSignal = true;
   }
   // getter
@@ -32,6 +34,9 @@ export class Signal<S = undefined>
       track(this);
     }
     return this._snapshot;
+  }
+  get deps() {
+    return this._deps;
   }
   get isSignal() {
     return this._isSignal;

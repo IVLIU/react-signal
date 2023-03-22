@@ -3,6 +3,7 @@ import type { EffectCallback, DependencyList } from "react";
 export interface ISignal<T = any> {
   value: T;
   snapshot: T;
+  deps: Set<IEffect>;
   subscribe: (listener: (...args: T[]) => void) => () => boolean;
   isSignal: boolean;
 }

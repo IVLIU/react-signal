@@ -1,15 +1,14 @@
-import type { EffectCallback } from "react";
 import type { IEffect, IEffectRef } from "./type";
 
 export const effectRef: IEffectRef = { current: null };
 
-export class Effect implements IEffect {
+export class Effect<T> implements IEffect {
   // properties
-  private _callback: EffectCallback;
+  private _callback: () => T;
   private _isDirty: boolean;
   private _isEffect: boolean;
   // constructor
-  constructor(callback: EffectCallback) {
+  constructor(callback: () => T) {
     this._callback = callback;
     this._isDirty = false;
     this._isEffect = true;
