@@ -1,5 +1,6 @@
 import { Subscription } from "./Subscription";
 import { track } from "./track";
+import { trigger } from "./trigger";
 import { untrackRef } from "./untrack";
 import type { ISignal, IEffect } from "./type";
 
@@ -8,9 +9,9 @@ export class Signal<S = undefined>
   implements ISignal<S>
 {
   // properties
+  public deps?: Set<IEffect>;
   private _value: S;
   private _snapshot: S;
-  private _deps: Set<IEffect>;
   private _isSignal: boolean;
   // constructor
   constructor(initialValue: S | (() => S)) {
@@ -19,7 +20,6 @@ export class Signal<S = undefined>
       typeof initialValue === "function"
         ? (initialValue as () => S)()
         : initialValue;
-    this._deps = new Set();
     this._isSignal = true;
   }
   // getter
@@ -35,9 +35,6 @@ export class Signal<S = undefined>
     }
     return this._snapshot;
   }
-  get deps() {
-    return this._deps;
-  }
   get isSignal() {
     return this._isSignal;
   }
@@ -45,6 +42,7 @@ export class Signal<S = undefined>
   set value(newValue: S) {
     this.listeners.forEach((listener) => listener(newValue));
     this._value = newValue;
+    trigger(this);
   }
   set snapshot(newSnapshot: S) {
     this._snapshot = newSnapshot;

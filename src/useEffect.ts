@@ -1,26 +1,27 @@
-import { useState, useEffect as raw_useEffect, useDebugValue } from "react";
-import { runWithDep } from "./runWithDep";
-import { Dep } from "./Dep";
+import { useMemo, useEffect as raw_useEffect, useDebugValue } from "react";
+import { createEffect } from "./createEffect";
 import { destroy } from "./destroy";
 import type { EffectCallback, DependencyList } from "react";
 
 export const useEffect = (
-  effect: EffectCallback,
+  callback: EffectCallback,
   deps?: DependencyList | null
 ) => {
-  const firstDep = useState(() => new Dep())[0];
+  const effect = useMemo(() => createEffect(callback), []);
   const isNullDeps = deps === null;
 
-  useDebugValue(effect);
+  useDebugValue(effect.callback);
+
+  console.log("effect", effect.b);
 
   raw_useEffect(
     () => {
       if (isNullDeps) {
-        return destroy(effect());
+        return destroy(effect.execute());
       } else {
-        return runWithDep(firstDep, () => destroy(effect()));
+        return destroy(effect.execute());
       }
     },
-    isNullDeps ? undefined : deps ? [firstDep.deps, ...deps] : [firstDep.deps]
+    isNullDeps ? undefined : deps ? [effect.b, ...deps] : [effect.b]
   );
 };
