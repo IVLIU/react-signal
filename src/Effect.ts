@@ -1,16 +1,13 @@
-import type { EffectCallback } from "react";
-import type { IEffect, IEffectRef } from "./type";
+import type { IEffect, IEffectRef } from './type';
 
 export const effectRef: IEffectRef = { current: null };
 
-export class Effect implements IEffect {
+export class Effect<T> implements IEffect<T> {
   // properties
-  private _callback: EffectCallback;
   private _isDirty: boolean;
   private _isEffect: boolean;
   // constructor
-  constructor(callback: EffectCallback) {
-    this._callback = callback;
+  constructor() {
     this._isDirty = false;
     this._isEffect = true;
   }
@@ -25,12 +22,13 @@ export class Effect implements IEffect {
   mark() {
     this._isDirty = true;
   }
-  execute() {
+  run(callback: () => T) {
     try {
       effectRef.current = this;
+      return callback();
     } finally {
-      effectRef.current = null;
       this._isDirty = false;
+      effectRef.current = null;
     }
   }
 }

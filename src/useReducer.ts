@@ -1,12 +1,12 @@
 import {
-  useState,
+  useMemo,
   useReducer as raw_useReducer,
   useCallback,
   useDebugValue,
-} from "react";
-import { createSignal } from "./createSignal";
-import { destroyRef } from "./destroy";
-import { objectIs } from "./objectIs";
+} from 'react';
+import { createSignal } from './createSignal';
+import { destroyRef } from './destroy';
+import { objectIs } from './objectIs';
 import type {
   ReducerWithoutAction,
   ReducerStateWithoutAction,
@@ -15,42 +15,46 @@ import type {
   ReducerState,
   Dispatch,
   ReducerAction,
-} from "react";
-import type { ISignal } from "./type";
+} from 'react';
+import type { ISignal } from './type';
 
 export function useReducer<R extends ReducerWithoutAction<any>, I>(
   reducer: R,
   initializerArg: I | ISignal<I>,
-  initializer: (arg: I) => ReducerStateWithoutAction<R>
+  initializer: (arg: I) => ReducerStateWithoutAction<R>,
 ): [() => ReducerStateWithoutAction<R>, DispatchWithoutAction];
 export function useReducer<R extends ReducerWithoutAction<any>>(
   reducer: R,
   initializerArg: ReducerStateWithoutAction<R>,
-  initializer?: undefined
+  initializer?: undefined,
 ): [() => ReducerStateWithoutAction<R>, DispatchWithoutAction];
 export function useReducer<R extends Reducer<any, any>, I>(
   reducer: R,
   initializerArg: (I & ReducerState<R>) | ISignal<I & ReducerState<R>>,
-  initializer: (arg: I & ReducerState<R>) => ReducerState<R>
+  initializer: (arg: I & ReducerState<R>) => ReducerState<R>,
 ): [() => ReducerState<R>, Dispatch<ReducerAction<R>>];
 export function useReducer<R extends Reducer<any, any>, I>(
   reducer: R,
   initializerArg: I | ISignal<I>,
-  initializer: (arg: I) => ReducerState<R>
+  initializer: (arg: I) => ReducerState<R>,
 ): [() => ReducerState<R>, Dispatch<ReducerAction<R>>];
 export function useReducer<R extends Reducer<any, any>>(
   reducer: R,
   initialState: ReducerState<R>,
-  initializer?: undefined
+  initializer?: undefined,
 ): [() => ReducerState<R>, Dispatch<ReducerAction<R>>];
 export function useReducer<
-  R extends ReducerWithoutAction<any> | Reducer<any, any>
+  R extends ReducerWithoutAction<any> | Reducer<any, any>,
 >(reducer: R, initializerArgOrState: any, initializer?: any) {
-  const signal = useState(() =>
-    createSignal(
-      initializer ? initializer(initializerArgOrState) : initializerArgOrState
-    )
-  )[0];
+  const signal = useMemo(
+    () =>
+      createSignal(
+        initializer
+          ? initializer(initializerArgOrState)
+          : initializerArgOrState,
+      ),
+    [],
+  );
   const dispatch = raw_useReducer(
     (prevValue: ReducerState<R>, action: ReducerAction<R>) => {
       const nextValue = reducer(prevValue, action);
@@ -61,12 +65,12 @@ export function useReducer<
       signal.value = nextValue;
       return nextValue;
     },
-    signal.value
+    signal.value,
   )[1];
 
   const get = useCallback(
     () => (destroyRef.current === true ? signal.snapshot : signal.value),
-    []
+    [],
   );
 
   useDebugValue(signal.value);

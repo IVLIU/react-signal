@@ -1,13 +1,15 @@
 import { Subscription } from './Subscription';
 import { track } from './track';
+import { trigger } from './trigger';
 import { untrackRef } from './untrack';
-import type { ISignal } from './type';
+import type { ISignal, IEffect } from './type';
 
 export class Signal<S = undefined>
   extends Subscription<S[]>
   implements ISignal<S>
 {
   // properties
+  public deps?: Set<IEffect>;
   private _value: S;
   private _snapshot: S;
   private _isSignal: boolean;
@@ -40,6 +42,7 @@ export class Signal<S = undefined>
   set value(newValue: S) {
     this.listeners.forEach((listener) => listener(newValue));
     this._value = newValue;
+    trigger(this);
   }
   set snapshot(newSnapshot: S) {
     this._snapshot = newSnapshot;

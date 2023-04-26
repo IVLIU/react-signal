@@ -1,15 +1,17 @@
-import type { EffectCallback, DependencyList } from "react";
+import type { DependencyList } from 'react';
 
 export interface ISignal<T = any> {
   value: T;
   snapshot: T;
+  deps?: Set<IEffect>;
   subscribe: (listener: (...args: T[]) => void) => () => boolean;
   isSignal: boolean;
 }
 
-export interface IEffect {
+export interface IEffect<T = any> {
   isDirty: boolean;
-  execute: () => ReturnType<EffectCallback>;
+  mark(): void;
+  run(callback: () => T): T;
 }
 
 export interface IEffectRef {
