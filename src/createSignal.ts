@@ -7,10 +7,10 @@ export function createSignal<T>(
   initialValue: T | ISignal<T> | (() => T),
 ): ISignal<T>;
 export function createSignal<T>(
-  initialValue?: T | ISignal<T> | (() => T),
+  arg?: T | ISignal<T> | (() => T),
 ): ISignal<T | undefined> {
-  if (isSignal<T>(initialValue)) {
-    return initialValue;
+  if (isSignal<T>(arg)) {
+    return arg;
   }
-  return new Signal(initialValue);
+  return new Signal(arg);
 }

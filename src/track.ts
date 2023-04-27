@@ -1,13 +1,10 @@
-import { depRef } from './Dep';
+import { effectRef } from './Effect';
 import type { ISignal } from './type';
 
 export const track = (signal: ISignal) => {
-  if (depRef.current === null) {
+  if (effectRef.current === null) {
     return;
   }
-  const signals = depRef.current.signals;
-  if (!signals.has(signal)) {
-    signals.add(signal);
-  }
-  return () => signals.delete(signal);
+  const deps = signal.deps || (signal.deps = new Set());
+  deps.add(effectRef.current);
 };

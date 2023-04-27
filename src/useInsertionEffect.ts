@@ -1,30 +1,26 @@
-import React, { useState, useEffect, useDebugValue } from "react";
-import { runWithDep } from "./runWithDep";
-import { Dep } from "./Dep";
-import { destroy } from "./destroy";
-import type { EffectCallback, DependencyList } from "react";
+import React, { useRef, useMemo, useEffect, useDebugValue } from 'react';
+import { createEffect } from './createEffect';
+import { destroy } from './destroy';
+import type { EffectCallback, DependencyList } from 'react';
 
 let _useInsertionEffect: typeof useEffect | null = null;
 
-if (typeof React.useInsertionEffect === "function") {
+if (typeof React.useInsertionEffect === 'function') {
   _useInsertionEffect = (
-    effect: EffectCallback,
-    deps?: DependencyList | null
+    callback: EffectCallback,
+    deps?: DependencyList | null,
   ) => {
-    const firstDep = useState(() => new Dep())[0];
-    const isNullDeps = deps === null;
+    const bit = useRef(0);
+    const effect = useMemo(() => createEffect(callback), []);
+    const firstDep = effect.isDirty
+      ? (bit.current = (bit.current + 1) % 3)
+      : bit.current;
 
-    useDebugValue(effect);
+    useDebugValue(callback);
 
     React.useInsertionEffect(
-      () => {
-        if (isNullDeps) {
-          return destroy(effect());
-        } else {
-          return runWithDep(firstDep, () => destroy(effect()));
-        }
-      },
-      isNullDeps ? undefined : deps ? [firstDep.deps, ...deps] : [firstDep.deps]
+      () => destroy(effect.run(callback)),
+      deps === null ? undefined : deps ? [firstDep, ...deps] : [firstDep],
     );
   };
 }
